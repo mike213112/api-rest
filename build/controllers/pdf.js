@@ -16,12 +16,30 @@ const database_1 = __importDefault(require("../database/database"));
 class PDFSERVER {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield database_1.default.query("SELECT 1 as val");
+            const data = yield database_1.default.query("SELECT * FROM datos");
+            res.status(200).send(data);
         });
     }
     Insert(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield database_1.default.query("INSERT INTO Datos VALUE (?)", [req.body]);
+            /*const data = await db.query("INSERT INTO Datos set ?", [req.body]);
+            try {
+                res.status(200).send(data);
+            } catch {
+                res.status(400).send(data);
+            }*/
+            const query = 'INSERT INTO datos (name,created_at) VALUE (?,?)';
+            const id = req.body.id;
+            const name = req.body.name;
+            console.log("hola  === ", req.body);
+            console.log("id: " + id + " name: " + name);
+            const respuesta = yield database_1.default.query(query, [req.body.name, req.body.created_at]);
+            try {
+                res.status(200).json(req.body);
+            }
+            catch (_a) {
+                res.status(200).json(req.params);
+            }
         });
     }
 }
